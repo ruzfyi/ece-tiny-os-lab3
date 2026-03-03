@@ -2,3 +2,5 @@ build/
 debug/
 .generated_files/
 dist/
+queuelogs/
+nbproject/
