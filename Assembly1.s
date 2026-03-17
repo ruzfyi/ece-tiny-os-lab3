@@ -41,6 +41,10 @@
 .global LADC				//student comment here
 .global ASCII				//student comment here
 .global DATA				//student comment here
+ 
+.global HIGH
+.global LOW
+.global EEPROM_DATA
 
 .set	temp,0				//student comment here
 
@@ -182,9 +186,9 @@ A2V1:	lds		r16,ADCSRA			//student comment here
 EEPROM_Write:      
 		sbic    EECR,EEPE
 		rjmp    EEPROM_Write		; Wait for completion of previous write
-		ldi		r18,0x00			; Set up address (r18:r17) in address register
-		ldi		r17,0x05 
-		ldi		r16,'F'				; Set up data in r16    
+		lds		r18,HIGH			; Set up address (r18:r17) in address register
+		lds		r17,LOW 
+		lds		r16,EEPROM_DATA				; Set up data in r16    
 		out     EEARH, r18      
 		out     EEARL, r17			      
 		out     EEDR,r16			; Write data (r16) to Data Register  
@@ -196,8 +200,8 @@ EEPROM_Write:
 EEPROM_Read:					    
 		sbic    EECR,EEPE    
 		rjmp    EEPROM_Read		; Wait for completion of previous write
-		ldi		r18,0x00		; Set up address (r18:r17) in EEPROM address register
-		ldi		r17,0x05
+		lds		r18,HIGH		; Set up address (r18:r17) in EEPROM address register
+		lds		r17,LOW
 		ldi		r16,0x00   
 		out     EEARH, r18   
 		out     EEARL, r17		   

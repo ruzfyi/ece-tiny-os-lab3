@@ -34,14 +34,14 @@ unsigned char DATA;				//shared internal variable with Assembly
 char HADC;						//shared ADC variable with Assembly
 char LADC;						//shared ADC variable with Assembly
 
-int REGH;
-int REGL;
-int EEPROM_DATA;
+char HIGH;                      //shared EEPROM variable with Assembly
+char LOW;                       //shared EEPROM variable with Assembly
+char EEPROM_DATA;               //shared EEPROM variable with Assembly
 
 char volts[5];					//string buffer for ADC output
 int Acc;						//Accumulator for ADC use
 
-void UART_Puts(char *str)	//Display a string in the PC Terminal Program
+void UART_Puts(const char *str)	//Display a string in the PC Terminal Program
 {
 	while (*str)
 	{
@@ -87,24 +87,7 @@ void LCD(void)						//Lite LCD demo
     LCD_Puts("Hello World!");
 }
 
-void teamname(void){
-    char teamname[9] = "Plank :D ";
-    char swap;
-    for(int j = 0; j < 15; j++){
-        LCD(teamname);
-        //UART_Puts(teamname);
-        //UART_Puts("\r\n");
-        swap = teamname[0];
-        for(int counter = 1; counter < 9; counter++){
-            UART_Puts(MS1);
-            teamname[counter-1]=teamname[counter];
-        }
-        teamname[8]=swap;
-        //LCD_Puts("                ");
-    }
-}
-
-void LCD(const char* str)			//Modified LCD to print given string
+void LCD_STR(const char* str)			//Modified LCD to print given string
 {
 	DATA = 0x34;					//Set 8bit 2line 5x10 format
 	LCD_Write_Command();
@@ -117,6 +100,23 @@ void LCD(const char* str)			//Modified LCD to print given string
 	DATA = 0x0f;					//turn on display cursor and cursor blink
 	LCD_Write_Command();
     LCD_Puts(str);
+}
+
+void teamname(void){
+    char teamname[9] = "Plank :D ";
+    char swap;
+    for(int j = 0; j < 15; j++){
+        LCD_STR(teamname);
+        //UART_Puts(teamname);
+        //UART_Puts("\r\n");
+        swap = teamname[0];
+        for(int counter = 1; counter < 9; counter++){
+            UART_Puts(MS1);
+            teamname[counter-1]=teamname[counter];
+        }
+        teamname[8]=swap;
+        //LCD_Puts("                ");
+    }
 }
 
 void ADC(void)						//Lite Demo of the Analog to Digital Converter
@@ -147,39 +147,25 @@ void ADC(void)						//Lite Demo of the Analog to Digital Converter
 	
 }
 
-void EEPROM(void)
-{
-	UART_Puts("\r\nEEPROM Write and Read.");
-	/*
-	Re-engineer this subroutine so that a byte of data can be written to any address in EEPROM
-	during run-time via the command line and the same byte of data can be read back and verified after the power to
-	the Xplained Mini board has been cycled. Ask the user to enter a valid EEPROM address and an
-	8-bit data value. Utilize the following two given Assembly based drivers to communicate with the EEPROM. You
-	may modify the EEPROM drivers as needed. User must be able to always return to command line.
-	*/
-	UART_Puts("\r\n");
-	EEPROM_Write();
-	UART_Puts("\r\n");
-	EEPROM_Read();
-	UART_Put();
-	UART_Puts("\r\n");
+int verify(char address){
+	if(address-'0'>=0&&address-'0'<=9){
+		return address-'0';
+	}else if(address>=65&&address<=70){
+		return address-60;
+	}else if(address>=97&&address<=102){
+		return address-87;
+	}
+	return -1;
 }
 
-void CustomEEPROM(void)
+void EEPROM_Address(void)
 {
-    int ASCIIOUT;
-    UART_Puts(MS5); //error message
-    while (ASCII == '\0'){UART_Get();}
-    
-    char address = 0;
 	int charconversion;
-	unsigned short HIGH;
-	unsigned short LOW;
 	int index = 0;
 	while(index < 4){
-		//scanf("%c",&address);
-		charconversion = verify(address);
-		//printf("%d\n",verify(address));
+        UART_Puts(MS4);
+        while (ASCII == '\0'){UART_Get();}
+		charconversion = verify(ASCII);
 		if(charconversion!=-1){
 			switch(index){
 				case 0:
@@ -194,27 +180,58 @@ void CustomEEPROM(void)
 				case 3:
 					LOW += charconversion;
 					break;
-
 			}
 			index++;
-		}
+		}else{
+            UART_Puts(MS5);
+        }
+        ASCII = '\0';
 	}
-	//printf("HIGH Register %d\n",HIGH);
-	//printf("LOW Register %d\n",LOW);
-	return 0;
 }
 
-
-int verify(char address){
-	//printf("%d",address);
-	if(address-'0'>=0&&address-'0'<=9){
-		return address-'0';
-	}else if(address>=65&&address<=70){
-		return address-60;
-	}else if(address>=97&&address<=102){
-		return address-87;
+void EEPROM_Value(void){
+    int charconversion;
+	int index = 0;
+	while(index < 2){
+        UART_Puts(MS4);
+        while (ASCII == '\0'){UART_Get();}
+		charconversion = verify(ASCII);
+		if(charconversion!=-1){
+			switch(index){
+				case 0:
+					EEPROM_DATA = charconversion*16;
+					break;
+				case 1:
+					EEPROM_DATA += charconversion;
+					break;
+			}
+			index++;
+		}else{
+            UART_Puts(MS5);
+        }
+        ASCII = '\0';
 	}
-	return -1;
+}
+
+void EEPROM(void)
+{
+	UART_Puts("\r\nEEPROM Write and Read.");
+	/*
+	Re-engineer this subroutine so that a byte of data can be written to any address in EEPROM
+	during run-time via the command line and the same byte of data can be read back and verified after the power to
+	the Xplained Mini board has been cycled. Ask the user to enter a valid EEPROM address and an
+	8-bit data value. Utilize the following two given Assembly based drivers to communicate with the EEPROM. You
+	may modify the EEPROM drivers as needed. User must be able to always return to command line.
+	*/
+	UART_Puts("\r\n");
+    EEPROM_Address();
+    EEPROM_Value();
+	EEPROM_Write();
+	UART_Puts("\r\n");
+    EEPROM_Address();
+	EEPROM_Read();
+	UART_Put();
+	UART_Puts("\r\n");
 }
 
 void Command(void)					//command interpreter
