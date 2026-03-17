@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=TinyOS.X
+PROJECTNAME=ece-tiny-os-lab3
 
 # Active Configuration
 DEFAULTCONF=default

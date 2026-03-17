@@ -6,5 +6,5 @@
 CND_BASEDIR=`pwd`
 # default configuration
 CND_ARTIFACT_DIR_default=dist/default/production
-CND_ARTIFACT_NAME_default=TinyOS.X.production.hex
-CND_ARTIFACT_PATH_default=dist/default/production/TinyOS.X.production.hex
+CND_ARTIFACT_NAME_default=ece-tiny-os-lab3.production.hex
+CND_ARTIFACT_PATH_default=dist/default/production/ece-tiny-os-lab3.production.hex

@@ -34,10 +34,14 @@ unsigned char DATA;				//shared internal variable with Assembly
 char HADC;						//shared ADC variable with Assembly
 char LADC;						//shared ADC variable with Assembly
 
+int REGH;
+int REGL;
+int EEPROM_DATA;
+
 char volts[5];					//string buffer for ADC output
 int Acc;						//Accumulator for ADC use
 
-void UART_Puts(const char *str)	//Display a string in the PC Terminal Program
+void UART_Puts(char *str)	//Display a string in the PC Terminal Program
 {
 	while (*str)
 	{
@@ -70,23 +74,49 @@ void HELP(void)						//Display available Tiny OS Commands on Terminal
 
 void LCD(void)						//Lite LCD demo
 {
-	DATA = 0x34;					//Student Comment Here
+	DATA = 0x34;					//Set 8bit 2line 5x10 format
 	LCD_Write_Command();
-	DATA = 0x08;					//Student Comment Here
+	DATA = 0x08;					//turn display off
 	LCD_Write_Command();
-	DATA = 0x02;					//Student Comment Here
+	DATA = 0x02;					//return cursor to home
 	LCD_Write_Command();
-	DATA = 0x06;					//Student Comment Here
+	DATA = 0x06;					//set cursor direction right
 	LCD_Write_Command();
-	DATA = 0x0f;					//Student Comment Here
+	DATA = 0x0f;					//turn on display cursor and cursor blink
 	LCD_Write_Command();
-	LCD_Puts("Hello ECE412!");
-	/*
-	Re-engineer this subroutine to have the LCD endlessly scroll a marquee sign of 
-	your Team's name either vertically or horizontally. Any key press should stop
-	the scrolling and return execution to the command line in Terminal. User must
-	always be able to return to command line.
-	*/
+    LCD_Puts("Hello World!");
+}
+
+void teamname(void){
+    char teamname[9] = "Plank :D ";
+    char swap;
+    for(int j = 0; j < 15; j++){
+        LCD(teamname);
+        //UART_Puts(teamname);
+        //UART_Puts("\r\n");
+        swap = teamname[0];
+        for(int counter = 1; counter < 9; counter++){
+            UART_Puts(MS1);
+            teamname[counter-1]=teamname[counter];
+        }
+        teamname[8]=swap;
+        //LCD_Puts("                ");
+    }
+}
+
+void LCD(const char* str)			//Modified LCD to print given string
+{
+	DATA = 0x34;					//Set 8bit 2line 5x10 format
+	LCD_Write_Command();
+	DATA = 0x08;					//turn display off
+	LCD_Write_Command();
+	DATA = 0x02;					//return cursor to home
+	LCD_Write_Command();
+	DATA = 0x06;					//set cursor direction right
+	LCD_Write_Command();
+	DATA = 0x0f;					//turn on display cursor and cursor blink
+	LCD_Write_Command();
+    LCD_Puts(str);
 }
 
 void ADC(void)						//Lite Demo of the Analog to Digital Converter
@@ -135,6 +165,57 @@ void EEPROM(void)
 	UART_Puts("\r\n");
 }
 
+void CustomEEPROM(void)
+{
+    int ASCIIOUT;
+    UART_Puts(MS5); //error message
+    while (ASCII == '\0'){UART_Get();}
+    
+    char address = 0;
+	int charconversion;
+	unsigned short HIGH;
+	unsigned short LOW;
+	int index = 0;
+	while(index < 4){
+		//scanf("%c",&address);
+		charconversion = verify(address);
+		//printf("%d\n",verify(address));
+		if(charconversion!=-1){
+			switch(index){
+				case 0:
+					HIGH = charconversion*16;
+					break;
+				case 1:
+					HIGH += charconversion;
+					break;
+				case 2:
+					LOW = charconversion*16;
+					break;
+				case 3:
+					LOW += charconversion;
+					break;
+
+			}
+			index++;
+		}
+	}
+	//printf("HIGH Register %d\n",HIGH);
+	//printf("LOW Register %d\n",LOW);
+	return 0;
+}
+
+
+int verify(char address){
+	//printf("%d",address);
+	if(address-'0'>=0&&address-'0'<=9){
+		return address-'0';
+	}else if(address>=65&&address<=70){
+		return address-60;
+	}else if(address>=97&&address<=102){
+		return address-87;
+	}
+	return -1;
+}
 
 void Command(void)					//command interpreter
 {
@@ -144,18 +225,23 @@ void Command(void)					//command interpreter
 	{
 		UART_Get();
 	}
+    //UART_Puts("COMMAND RECIEVED: ");
+    //UART_Put();
+    //UART_Puts("\r\n");
 	switch (ASCII)
 	{
-		case 'L' | 'l': LCD();
-		break;
+		case 'L' | 'l': 
+            LCD();
+            teamname();
+            break;
 		case 'A' | 'a': ADC();
-		break;
+            break;
 		case 'E' | 'e': EEPROM();
-		break;
+            break;
 		default:
-		UART_Puts(MS5);
-		HELP();
-		break;  			
+            UART_Puts(MS5);
+            HELP();
+            break;  			
 //Add a 'USART' command and subroutine to allow the user to reconfigure the 						
 //serial port parameters during runtime. Modify baud rate, # of data bits, parity, 							
 //# of stop bits.
