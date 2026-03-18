@@ -9,10 +9,16 @@
  
  const char MS1[] = "\r\nECE-412 ATMega328PB Tiny OS";
  const char MS2[] = "\r\nby Eugene Rockey Copyright 2022, All Rights Reserved";
- const char MS3[] = "\r\nMenu: (L)CD, (A)DC, (E)EPROM\r\n";
+ const char MS3[] = "\r\nMenu: (L)CD, (A)DC, (E)EPROM, (S)WITCH BAUDRATE, (U)SART\r\n";
  const char MS4[] = "\r\nReady: ";
  const char MS5[] = "\r\nInvalid Command Try Again...";
  const char MS6[] = "Volts\r";
+ 
+ const char MS7[] = "\r\nUSART: (B)AUD RATE, (P)ARITY, (S)TOP BITS\r\n";
+ 
+ const char MS8[] = "\r\nBAUD RATE: (1) 9600, (2) 19200\r\n";
+ const char MS9[] = "\r\nPARITY: (N)ONE, (E)VEN, (O)DD\r\n";
+ const char MS10[] = "\r\nSTOP BITS: (1) ONE, (2) TWO\r\n";
  
  
 
@@ -21,6 +27,20 @@ void UART_Init(void);
 void UART_Clear(void);
 void UART_Get(void);
 void UART_Put(void);
+
+void UART_Fast_Init(void);
+void UART_Slow_Init(void);
+
+void BAUD_96(void);
+void BAUD_192(void);
+
+void PARITY_OFF(void);
+void PARITY_EVEN(void);
+void PARITY_ODD(void);
+
+void STOPBIT_ONE(void);
+void STOPBIT_TWO(void);
+
 void LCD_Write_Data(void);
 void LCD_Write_Command(void);
 void LCD_Read_Data(void);
@@ -36,6 +56,8 @@ char LADC;						//shared ADC variable with Assembly
 
 char volts[5];					//string buffer for ADC output
 int Acc;						//Accumulator for ADC use
+
+int BaudMode = 0;               //Baud rate select, 1 is Fast and 0 is Slow
 
 void UART_Puts(const char *str)	//Display a string in the PC Terminal Program
 {
@@ -135,6 +157,105 @@ void EEPROM(void)
 	UART_Puts("\r\n");
 }
 
+void SWITCH_BAUD(void)
+{
+    if (BaudMode == 0) {
+        BaudMode = 1;
+        UART_Fast_Init();
+    } 
+    else if (BaudMode == 1) {
+        BaudMode = 0;
+        UART_Slow_Init();
+    }
+}
+
+void BAUD(void)
+{
+    UART_Puts(MS8);
+    ASCII = '\0';
+    while (ASCII == '\0')
+    {
+        UART_Get();
+    }
+    switch (ASCII)
+    {
+        case '1': BAUD_96();
+        break;
+        case '2': BAUD_192();
+        break;
+        default: 
+            UART_Puts(MS5);
+            UART_Puts(MS8);
+        break;
+    }
+}
+
+void PARITY(void)
+{
+    UART_Puts(MS9);
+    ASCII = '\0';
+    while (ASCII == '\0')
+    {
+        UART_Get();
+    }
+    switch (ASCII)
+    {
+        case 'N' | 'n': PARITY_OFF();
+        break;
+        case 'E' | 'e': PARITY_EVEN();
+        break;
+        case 'O' | 'o': PARITY_ODD();
+        break;
+        default: 
+            UART_Puts(MS5);
+            UART_Puts(MS9);
+        break;
+    }
+}
+
+void STOPBITS(void)
+{
+    UART_Puts(MS10);
+    ASCII = '\0';
+    while (ASCII == '\0')
+    {
+        UART_Get();
+    }
+    switch (ASCII)
+    {
+        case '1': STOPBIT_ONE();
+        break;
+        case '2': STOPBIT_TWO();
+        break;
+        default: 
+            UART_Puts(MS5);
+            UART_Puts(MS10);
+        break;
+    }
+}
+
+void USART(void)
+{
+    UART_Puts(MS7);
+    ASCII = '\0';
+    while (ASCII == '\0')
+    {
+        UART_Get();
+    }
+    switch (ASCII)
+    {
+        case 'B' | 'b': BAUD();
+        break;
+        case 'P' | 'p': PARITY();
+        break;
+        case 'S' | 's': STOPBITS();
+        break;
+        default: 
+            UART_Puts(MS5);
+            UART_Puts(MS7);
+        break;
+    }
+}
 
 void Command(void)					//command interpreter
 {
@@ -152,6 +273,10 @@ void Command(void)					//command interpreter
 		break;
 		case 'E' | 'e': EEPROM();
 		break;
+        case 'S' | 's': SWITCH_BAUD();
+        break;
+        case 'U' | 'u': USART();
+        break;
 		default:
 		UART_Puts(MS5);
 		HELP();
@@ -165,6 +290,7 @@ void Command(void)					//command interpreter
 int main(void)
 {
 	Mega328P_Init();
+    //UART_Fast_Init();
 	Banner();
 	while (1)
 	{

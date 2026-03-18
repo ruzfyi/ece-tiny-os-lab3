@@ -239,7 +239,6 @@ END GROUP
  *(.dinit)
  .dinit         0x0000000000000068        0xc data_init
                 0x0000000000000074                . = ALIGN (0x2)
- *fill*         0x0000000000000074        0x0 
                 0x0000000000000074                __trampolines_start = .
  *(.trampolines)
  .trampolines   0x0000000000000074        0x0 linker stubs
@@ -417,42 +416,42 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x0000000000000000       0x80
+.debug_aranges  0x0000000000000000       0xa8
  *(.debug_aranges)
  .debug_aranges
                 0x0000000000000000       0x20 build/default/production/Assembly1.o
  .debug_aranges
-                0x0000000000000020       0x60 build/default/production/main.o
+                0x0000000000000020       0x88 build/default/production/main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000      0xcf9
+.debug_info     0x0000000000000000     0x109e
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x0000000000000000      0x5f4 /opt/microchip/mplabx/v6.25/packs/Microchip/ATmega_DFP/3.3.279/xc8/avr/lib/avr5/crtatmega328p.o
  .debug_info    0x00000000000005f4       0x57 build/default/production/Assembly1.o
- .debug_info    0x000000000000064b      0x6ae build/default/production/main.o
+ .debug_info    0x000000000000064b      0xa53 build/default/production/main.o
 
-.debug_abbrev   0x0000000000000000      0x6a5
+.debug_abbrev   0x0000000000000000      0x6bf
  *(.debug_abbrev)
  .debug_abbrev  0x0000000000000000      0x5a2 /opt/microchip/mplabx/v6.25/packs/Microchip/ATmega_DFP/3.3.279/xc8/avr/lib/avr5/crtatmega328p.o
  .debug_abbrev  0x00000000000005a2       0x14 build/default/production/Assembly1.o
- .debug_abbrev  0x00000000000005b6       0xef build/default/production/main.o
+ .debug_abbrev  0x00000000000005b6      0x109 build/default/production/main.o
 
-.debug_line     0x0000000000000000      0x68d
+.debug_line     0x0000000000000000      0x972
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x0000000000000000      0x134 /opt/microchip/mplabx/v6.25/packs/Microchip/ATmega_DFP/3.3.279/xc8/avr/lib/avr5/crtatmega328p.o
- .debug_line    0x0000000000000134      0x315 build/default/production/Assembly1.o
- .debug_line    0x0000000000000449      0x244 build/default/production/main.o
+ .debug_line    0x0000000000000134      0x447 build/default/production/Assembly1.o
+ .debug_line    0x000000000000057b      0x3f7 build/default/production/main.o
 
-.debug_frame    0x0000000000000000       0xc8
+.debug_frame    0x0000000000000000      0x118
  *(.debug_frame)
- .debug_frame   0x0000000000000000       0xc8 build/default/production/main.o
+ .debug_frame   0x0000000000000000      0x118 build/default/production/main.o
 
-.debug_str      0x0000000000000000      0x262
+.debug_str      0x0000000000000000      0x2c3
  *(.debug_str)
  .debug_str     0x0000000000000000      0x208 /opt/microchip/mplabx/v6.25/packs/Microchip/ATmega_DFP/3.3.279/xc8/avr/lib/avr5/crtatmega328p.o
- .debug_str     0x0000000000000208       0x5a build/default/production/main.o
+ .debug_str     0x0000000000000208       0xbb build/default/production/main.o
 
 .debug_loc      0x0000000000000000       0x6a
  *(.debug_loc)
@@ -476,9 +475,9 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x0000000000000000       0x50
+.debug_ranges   0x0000000000000000       0x78
  *(.debug_ranges)
- .debug_ranges  0x0000000000000000       0x50 build/default/production/main.o
+ .debug_ranges  0x0000000000000000       0x78 build/default/production/main.o
 
 .debug_macro
  *(.debug_macro)
@@ -491,175 +490,227 @@ LOAD data_init
  .note.gnu.avr.deviceinfo
                 0x0000000000000000       0x40 /opt/microchip/mplabx/v6.25/packs/Microchip/ATmega_DFP/3.3.279/xc8/avr/lib/avr5/crtatmega328p.o
 
-.bss.Acc        0x00000000008001d5        0x2
- .bss.Acc       0x00000000008001d5        0x2 build/default/production/main.o
-                0x00000000008001d5                Acc
+.bss.BaudMode   0x0000000000800284        0x2
+ .bss.BaudMode  0x0000000000800284        0x2 build/default/production/main.o
+                0x0000000000800284                BaudMode
 
-.bss.volts      0x00000000008001d0        0x5
- .bss.volts     0x00000000008001d0        0x5 build/default/production/main.o
-                0x00000000008001d0                volts
+.bss.Acc        0x0000000000800286        0x2
+ .bss.Acc       0x0000000000800286        0x2 build/default/production/main.o
+                0x0000000000800286                Acc
 
-.bss.LADC       0x00000000008001d7        0x1
- .bss.LADC      0x00000000008001d7        0x1 build/default/production/main.o
-                0x00000000008001d7                LADC
+.bss.volts      0x000000000080027f        0x5
+ .bss.volts     0x000000000080027f        0x5 build/default/production/main.o
+                0x000000000080027f                volts
 
-.bss.HADC       0x00000000008001d8        0x1
- .bss.HADC      0x00000000008001d8        0x1 build/default/production/main.o
-                0x00000000008001d8                HADC
+.bss.LADC       0x0000000000800288        0x1
+ .bss.LADC      0x0000000000800288        0x1 build/default/production/main.o
+                0x0000000000800288                LADC
 
-.bss.DATA       0x00000000008001d9        0x1
- .bss.DATA      0x00000000008001d9        0x1 build/default/production/main.o
-                0x00000000008001d9                DATA
+.bss.HADC       0x0000000000800289        0x1
+ .bss.HADC      0x0000000000800289        0x1 build/default/production/main.o
+                0x0000000000800289                HADC
 
-.bss.ASCII      0x00000000008001da        0x1
- .bss.ASCII     0x00000000008001da        0x1 build/default/production/main.o
-                0x00000000008001da                ASCII
+.bss.DATA       0x000000000080028a        0x1
+ .bss.DATA      0x000000000080028a        0x1 build/default/production/main.o
+                0x000000000080028a                DATA
 
-.text           0x00000000000000c8      0x144
- .text          0x00000000000000c8      0x144 build/default/production/Assembly1.o
+.bss.ASCII      0x000000000080028b        0x1
+ .bss.ASCII     0x000000000080028b        0x1 build/default/production/main.o
+                0x000000000080028b                ASCII
+
+.text           0x00000000000000c8      0x1d2
+ .text          0x00000000000000c8      0x1d2 build/default/production/Assembly1.o
                 0x00000000000000c8                Mega328P_Init
-                0x000000000000010a                LCD_Write_Command
-                0x000000000000013c                LCD_Write_Data
-                0x0000000000000160                LCD_Read_Data
-                0x0000000000000178                UART_On
-                0x0000000000000184                UART_Off
-                0x000000000000018c                UART_Clear
-                0x000000000000019a                UART_Get
-                0x00000000000001ac                UART_Put
-                0x00000000000001be                ADC_Get
-                0x00000000000001de                EEPROM_Write
-                0x00000000000001f4                EEPROM_Read
+                0x000000000000010a                UART_Fast_Init
+                0x000000000000011e                UART_Slow_Init
+                0x0000000000000132                LCD_Write_Command
+                0x0000000000000164                LCD_Write_Data
+                0x0000000000000188                LCD_Read_Data
+                0x00000000000001a0                UART_On
+                0x00000000000001ac                UART_Off
+                0x00000000000001b4                UART_Clear
+                0x00000000000001c2                UART_Get
+                0x00000000000001d4                UART_Put
+                0x00000000000001e6                BAUD_96
+                0x00000000000001f4                BAUD_192
+                0x0000000000000202                PARITY_OFF
+                0x0000000000000210                PARITY_EVEN
+                0x0000000000000222                PARITY_ODD
+                0x0000000000000230                STOPBIT_ONE
+                0x000000000000023e                STOPBIT_TWO
+                0x000000000000024c                ADC_Get
+                0x000000000000026c                EEPROM_Write
+                0x0000000000000282                EEPROM_Read
 
-.text.ADC       0x000000000000020c       0xa8
- .text.ADC      0x000000000000020c       0xa8 build/default/production/main.o
-                0x000000000000020c                ADC
+.text.ADC       0x000000000000029a       0xa8
+ .text.ADC      0x000000000000029a       0xa8 build/default/production/main.o
+                0x000000000000029a                ADC
 
-.text.Command   0x00000000000002b4       0x46
- .text.Command  0x00000000000002b4       0x46 build/default/production/main.o
-                0x00000000000002b4                Command
+.text.Command   0x0000000000000342       0x5e
+ .text.Command  0x0000000000000342       0x5e build/default/production/main.o
+                0x0000000000000342                Command
 
-.text.LCD       0x00000000000002fa       0x3c
- .text.LCD      0x00000000000002fa       0x3c build/default/production/main.o
-                0x00000000000002fa                LCD
+.text.PARITY    0x00000000000003a0       0x4a
+ .text.PARITY   0x00000000000003a0       0x4a build/default/production/main.o
+                0x00000000000003a0                PARITY
 
-.text.EEPROM    0x0000000000000336       0x2e
- .text.EEPROM   0x0000000000000336       0x2e build/default/production/main.o
-                0x0000000000000336                EEPROM
+.text.USART     0x00000000000003ea       0x48
+ .text.USART    0x00000000000003ea       0x48 build/default/production/main.o
+                0x00000000000003ea                USART
+
+.text.BAUD      0x0000000000000432       0x40
+ .text.BAUD     0x0000000000000432       0x40 build/default/production/main.o
+                0x0000000000000432                BAUD
+
+.text.STOPBITS  0x0000000000000472       0x40
+ .text.STOPBITS
+                0x0000000000000472       0x40 build/default/production/main.o
+                0x0000000000000472                STOPBITS
+
+.text.LCD       0x00000000000004b2       0x3c
+ .text.LCD      0x00000000000004b2       0x3c build/default/production/main.o
+                0x00000000000004b2                LCD
+
+.text.SWITCH_BAUD
+                0x00000000000004ee       0x30
+ .text.SWITCH_BAUD
+                0x00000000000004ee       0x30 build/default/production/main.o
+                0x00000000000004ee                SWITCH_BAUD
+
+.text.EEPROM    0x000000000000051e       0x2e
+ .text.EEPROM   0x000000000000051e       0x2e build/default/production/main.o
+                0x000000000000051e                EEPROM
 
 .text.libgcc.div
-                0x0000000000000364       0x28
+                0x000000000000054c       0x28
  .text.libgcc.div
-                0x0000000000000364       0x28 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
-                0x0000000000000364                __divmodhi4
-                0x0000000000000364                _div
+                0x000000000000054c       0x28 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x000000000000054c                __divmodhi4
+                0x000000000000054c                _div
 
 .text.libgcc.div
-                0x000000000000038c       0x28
+                0x0000000000000574       0x28
  .text.libgcc.div
-                0x000000000000038c       0x28 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
-                0x000000000000038c                __udivmodhi4
+                0x0000000000000574       0x28 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000000574                __udivmodhi4
 
 .text.UART_Puts
-                0x00000000000003b4       0x22
+                0x000000000000059c       0x22
  .text.UART_Puts
-                0x00000000000003b4       0x22 build/default/production/main.o
-                0x00000000000003b4                UART_Puts
+                0x000000000000059c       0x22 build/default/production/main.o
+                0x000000000000059c                UART_Puts
 
-.text.LCD_Puts  0x00000000000003d6       0x22
+.text.LCD_Puts  0x00000000000005be       0x22
  .text.LCD_Puts
-                0x00000000000003d6       0x22 build/default/production/main.o
-                0x00000000000003d6                LCD_Puts
+                0x00000000000005be       0x22 build/default/production/main.o
+                0x00000000000005be                LCD_Puts
 
-.text.Banner    0x00000000000003f8       0x1a
- .text.Banner   0x00000000000003f8       0x1a build/default/production/main.o
-                0x00000000000003f8                Banner
+.text.Banner    0x00000000000005e0       0x1a
+ .text.Banner   0x00000000000005e0       0x1a build/default/production/main.o
+                0x00000000000005e0                Banner
 
-.text.exit      0x0000000000000412       0x16
- .text.exit     0x0000000000000412       0x16 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
-                0x0000000000000412                exit
+.text.exit      0x00000000000005fa       0x16
+ .text.exit     0x00000000000005fa       0x16 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
+                0x00000000000005fa                exit
 
-.text.main      0x0000000000000428        0xe
- .text.main     0x0000000000000428        0xe build/default/production/main.o
-                0x0000000000000428                main
+.text.main      0x0000000000000610        0xe
+ .text.main     0x0000000000000610        0xe build/default/production/main.o
+                0x0000000000000610                main
 
-.text.HELP      0x0000000000000436        0xa
- .text.HELP     0x0000000000000436        0xa build/default/production/main.o
-                0x0000000000000436                HELP
+.text.HELP      0x000000000000061e        0xa
+ .text.HELP     0x000000000000061e        0xa build/default/production/main.o
+                0x000000000000061e                HELP
 
-.text           0x0000000000000440        0x4
- .text          0x0000000000000440        0x4 /opt/microchip/mplabx/v6.25/packs/Microchip/ATmega_DFP/3.3.279/xc8/avr/lib/avr5/crtatmega328p.o
-                0x0000000000000440                __vector_22
-                0x0000000000000440                __vector_1
-                0x0000000000000440                __vector_24
-                0x0000000000000440                __vector_12
-                0x0000000000000440                __bad_interrupt
-                0x0000000000000440                __vector_6
-                0x0000000000000440                __vector_3
-                0x0000000000000440                __vector_23
-                0x0000000000000440                __vector_25
-                0x0000000000000440                __vector_11
-                0x0000000000000440                __vector_13
-                0x0000000000000440                __vector_17
-                0x0000000000000440                __vector_19
-                0x0000000000000440                __vector_7
-                0x0000000000000440                __vector_5
-                0x0000000000000440                __vector_4
-                0x0000000000000440                __vector_9
-                0x0000000000000440                __vector_2
-                0x0000000000000440                __vector_21
-                0x0000000000000440                __vector_15
-                0x0000000000000440                __vector_8
-                0x0000000000000440                __vector_14
-                0x0000000000000440                __vector_10
-                0x0000000000000440                __vector_16
-                0x0000000000000440                __vector_18
-                0x0000000000000440                __vector_20
+.text           0x0000000000000628        0x4
+ .text          0x0000000000000628        0x4 /opt/microchip/mplabx/v6.25/packs/Microchip/ATmega_DFP/3.3.279/xc8/avr/lib/avr5/crtatmega328p.o
+                0x0000000000000628                __vector_22
+                0x0000000000000628                __vector_1
+                0x0000000000000628                __vector_24
+                0x0000000000000628                __vector_12
+                0x0000000000000628                __bad_interrupt
+                0x0000000000000628                __vector_6
+                0x0000000000000628                __vector_3
+                0x0000000000000628                __vector_23
+                0x0000000000000628                __vector_25
+                0x0000000000000628                __vector_11
+                0x0000000000000628                __vector_13
+                0x0000000000000628                __vector_17
+                0x0000000000000628                __vector_19
+                0x0000000000000628                __vector_7
+                0x0000000000000628                __vector_5
+                0x0000000000000628                __vector_4
+                0x0000000000000628                __vector_9
+                0x0000000000000628                __vector_2
+                0x0000000000000628                __vector_21
+                0x0000000000000628                __vector_15
+                0x0000000000000628                __vector_8
+                0x0000000000000628                __vector_14
+                0x0000000000000628                __vector_10
+                0x0000000000000628                __vector_16
+                0x0000000000000628                __vector_18
+                0x0000000000000628                __vector_20
 
-.text._Exit     0x0000000000000444        0x4
- .text._Exit    0x0000000000000444        0x4 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(_Exit.o)
-                0x0000000000000444                _Exit
+.text._Exit     0x000000000000062c        0x4
+ .text._Exit    0x000000000000062c        0x4 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(_Exit.o)
+                0x000000000000062c                _Exit
 
 .text.__dummy_fini
-                0x0000000000000448        0x2
+                0x0000000000000630        0x2
  .text.__dummy_fini
-                0x0000000000000448        0x2 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
-                0x0000000000000448                _fini
+                0x0000000000000630        0x2 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
+                0x0000000000000630                _fini
 
 .text.__dummy_funcs_on_exit
-                0x000000000000044a        0x2
+                0x0000000000000632        0x2
  .text.__dummy_funcs_on_exit
-                0x000000000000044a        0x2 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
-                0x000000000000044a                __funcs_on_exit
+                0x0000000000000632        0x2 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
+                0x0000000000000632                __funcs_on_exit
 
 .text.__dummy_simulator_exit
-                0x000000000000044c        0x2
+                0x0000000000000634        0x2
  .text.__dummy_simulator_exit
-                0x000000000000044c        0x2 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
-                0x000000000000044c                __simulator_exit
+                0x0000000000000634        0x2 /opt/microchip/xc8/v3.10/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/libc.a(exit.o)
+                0x0000000000000634                __simulator_exit
 
-.rodata.MS2     0x0000000000800100       0x37 load address 0x000000000000044e
- .rodata.MS2    0x0000000000800100       0x37 build/default/production/main.o
-                0x0000000000800100                MS2
+.rodata.MS3     0x0000000000800100       0x3d load address 0x0000000000000636
+ .rodata.MS3    0x0000000000800100       0x3d build/default/production/main.o
+                0x0000000000800100                MS3
 
-.rodata         0x0000000000800137       0x2a load address 0x0000000000000485
- .rodata        0x0000000000800137       0x2a build/default/production/main.o
+.rodata.MS2     0x000000000080013d       0x37 load address 0x0000000000000673
+ .rodata.MS2    0x000000000080013d       0x37 build/default/production/main.o
+                0x000000000080013d                MS2
 
-.rodata.MS3     0x0000000000800161       0x21 load address 0x00000000000004af
- .rodata.MS3    0x0000000000800161       0x21 build/default/production/main.o
-                0x0000000000800161                MS3
+.rodata.MS7     0x0000000000800174       0x2e load address 0x00000000000006aa
+ .rodata.MS7    0x0000000000800174       0x2e build/default/production/main.o
+                0x0000000000800174                MS7
 
-.rodata.MS5     0x0000000000800182       0x1f load address 0x00000000000004d0
- .rodata.MS5    0x0000000000800182       0x1f build/default/production/main.o
-                0x0000000000800182                MS5
+.rodata         0x00000000008001a2       0x2a load address 0x00000000000006d8
+ .rodata        0x00000000008001a2       0x2a build/default/production/main.o
 
-.rodata.MS1     0x00000000008001a1       0x1e load address 0x00000000000004ef
- .rodata.MS1    0x00000000008001a1       0x1e build/default/production/main.o
-                0x00000000008001a1                MS1
+.rodata.MS8     0x00000000008001cc       0x23 load address 0x0000000000000702
+ .rodata.MS8    0x00000000008001cc       0x23 build/default/production/main.o
+                0x00000000008001cc                MS8
 
-.rodata.MS4     0x00000000008001bf        0xa load address 0x000000000000050d
- .rodata.MS4    0x00000000008001bf        0xa build/default/production/main.o
-                0x00000000008001bf                MS4
+.rodata.MS9     0x00000000008001ef       0x22 load address 0x0000000000000725
+ .rodata.MS9    0x00000000008001ef       0x22 build/default/production/main.o
+                0x00000000008001ef                MS9
 
-.rodata.MS6     0x00000000008001c9        0x7 load address 0x0000000000000517
- .rodata.MS6    0x00000000008001c9        0x7 build/default/production/main.o
-                0x00000000008001c9                MS6
+.rodata.MS10    0x0000000000800211       0x20 load address 0x0000000000000747
+ .rodata.MS10   0x0000000000800211       0x20 build/default/production/main.o
+                0x0000000000800211                MS10
+
+.rodata.MS5     0x0000000000800231       0x1f load address 0x0000000000000767
+ .rodata.MS5    0x0000000000800231       0x1f build/default/production/main.o
+                0x0000000000800231                MS5
+
+.rodata.MS1     0x0000000000800250       0x1e load address 0x0000000000000786
+ .rodata.MS1    0x0000000000800250       0x1e build/default/production/main.o
+                0x0000000000800250                MS1
+
+.rodata.MS4     0x000000000080026e        0xa load address 0x00000000000007a4
+ .rodata.MS4    0x000000000080026e        0xa build/default/production/main.o
+                0x000000000080026e                MS4
+
+.rodata.MS6     0x0000000000800278        0x7 load address 0x00000000000007ae
+ .rodata.MS6    0x0000000000800278        0x7 build/default/production/main.o
+                0x0000000000800278                MS6
