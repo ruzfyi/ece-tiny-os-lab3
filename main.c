@@ -162,19 +162,26 @@ void EEPROM_Address(void)
 {
 	int charconversion;
 	int index = 0;
+    UART_Puts("Enter a 4 Digit Address: ");
 	while(index < 4){
-        UART_Puts(MS4);
-        while (ASCII == '\0'){UART_Get();}
+        ASCII = '\0';
+        while (ASCII == '\0'){
+            UART_Get();
+        }
+        UART_Put();
 		charconversion = verify(ASCII);
 		if(charconversion!=-1){
 			switch(index){
 				case 0:
+                    //UART_Puts("Address Digit 2:");
 					HIGH = charconversion*16;
 					break;
 				case 1:
+                    //UART_Puts("Address Digit 3:");
 					HIGH += charconversion;
 					break;
 				case 2:
+                    //UART_Puts("Address Digit 4:");
 					LOW = charconversion*16;
 					break;
 				case 3:
@@ -185,20 +192,25 @@ void EEPROM_Address(void)
 		}else{
             UART_Puts(MS5);
         }
-        ASCII = '\0';
 	}
+    UART_Puts("\r\n");
 }
 
 void EEPROM_Value(void){
     int charconversion;
 	int index = 0;
+    UART_Puts("Enter 1 Byte of Hex data: ");
 	while(index < 2){
-        UART_Puts(MS4);
-        while (ASCII == '\0'){UART_Get();}
+        ASCII = '\0';
+        while (ASCII == '\0'){
+            UART_Get();
+        }
+        UART_Put();
 		charconversion = verify(ASCII);
 		if(charconversion!=-1){
 			switch(index){
 				case 0:
+                    //UART_Puts("Data Digit 2:");
 					EEPROM_DATA = charconversion*16;
 					break;
 				case 1:
@@ -209,8 +221,25 @@ void EEPROM_Value(void){
 		}else{
             UART_Puts(MS5);
         }
-        ASCII = '\0';
 	}
+    UART_Puts("\r\n");
+}
+
+void UART_PUT_DEC(void){
+    int first = ASCII/16;
+    int zero = ASCII - first*16;
+    if(first<10){
+        ASCII = first + '0';
+    }else{
+        ASCII = first+55;
+    }
+    UART_Put();
+    if(first<10){
+        ASCII = zero + '0';
+    }else{
+        ASCII = zero+55;
+    }
+    UART_Put();
 }
 
 void EEPROM(void)
@@ -230,7 +259,8 @@ void EEPROM(void)
 	UART_Puts("\r\n");
     EEPROM_Address();
 	EEPROM_Read();
-	UART_Put();
+    UART_PUT_DEC();
+	//UART_Put();
 	UART_Puts("\r\n");
 }
 
@@ -249,7 +279,7 @@ void Command(void)					//command interpreter
 	{
 		case 'L' | 'l': 
             LCD();
-            teamname();
+            //teamname();
             break;
 		case 'A' | 'a': ADC();
             break;
