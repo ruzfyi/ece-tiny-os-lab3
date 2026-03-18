@@ -20,6 +20,7 @@ void LCD_Init(void);			//external Assembly functions
 void UART_Init(void);
 void UART_Clear(void);
 void UART_Get(void);
+void UART_Pass(void);
 void UART_Put(void);
 void LCD_Write_Data(void);
 void LCD_Write_Command(void);
@@ -72,19 +73,21 @@ void HELP(void)						//Display available Tiny OS Commands on Terminal
 	UART_Puts(MS3);
 }
 
-void LCD(void)						//Lite LCD demo
-{
-	DATA = 0x34;					//Set 8bit 2line 5x10 format
-	LCD_Write_Command();
-	DATA = 0x08;					//turn display off
-	LCD_Write_Command();
-	DATA = 0x02;					//return cursor to home
-	LCD_Write_Command();
-	DATA = 0x06;					//set cursor direction right
-	LCD_Write_Command();
-	DATA = 0x0f;					//turn on display cursor and cursor blink
-	LCD_Write_Command();
-    LCD_Puts("Hello World!");
+void UART_PUT_DEC(void){
+    int first = ASCII/16;
+    int zero = ASCII - first*16;
+    if(first<10){
+        ASCII = first + '0';
+    }else{
+        ASCII = first+55;
+    }
+    UART_Put();
+    if(zero<10){
+        ASCII = zero + '0';
+    }else{
+        ASCII = zero+55;
+    }
+    UART_Put();
 }
 
 void LCD_STR(const char* str)			//Modified LCD to print given string
@@ -100,6 +103,62 @@ void LCD_STR(const char* str)			//Modified LCD to print given string
 	DATA = 0x0f;					//turn on display cursor and cursor blink
 	LCD_Write_Command();
     LCD_Puts(str);
+}
+
+void LCD(void)						//Lite LCD demo
+{
+    UART_Pass();
+    char buffer = ASCII;
+    char output = buffer;
+    while(buffer == output){
+        UART_Pass();
+        output = ASCII;
+        
+        UART_Put();
+        UART_PUT_DEC();
+        
+        UART_Puts("\r\no          ");
+        UART_Puts("\r\n o         ");
+        UART_Puts("\r\n    o      ");
+        UART_Puts("\r\n       o   ");
+        UART_Puts("\r\n         o ");
+        UART_Puts("\r\n          o");
+        
+        //LCD_STR("plank           ");
+        /*
+        LCD_STR("plank           ");
+        LCD_STR(" plank          ");
+        LCD_STR("  plank         ");
+        LCD_STR("   plank        ");
+        LCD_STR("    plank       ");
+        LCD_STR("     plank      ");
+        LCD_STR("      plank     ");
+        LCD_STR("       plank    ");
+        LCD_STR("        plank   ");
+        LCD_STR("         plank  ");
+        LCD_STR("          plank ");
+        LCD_STR("           plank");
+        LCD_STR("k           plan");
+        LCD_STR("nk           pla");
+        LCD_STR("ank           pl");
+        LCD_STR("lank           p");
+        */
+        
+        //UART_Puts("\r\nChecking Input ");
+        //UART_Pass();
+        //UART_Put();
+        //UART_PUT_DEC();
+        
+        //UART_Puts("\r\nChecking Buffer ");
+        //ASCII = buffer;
+        //UART_Put();
+        //UART_PUT_DEC();
+    }
+    
+    UART_Puts("\r\nChecking Input At Last ");
+    UART_Pass();
+    UART_Put();
+    UART_PUT_DEC();
 }
 
 void teamname(void){
@@ -223,23 +282,6 @@ void EEPROM_Value(void){
         }
 	}
     UART_Puts("\r\n");
-}
-
-void UART_PUT_DEC(void){
-    int first = ASCII/16;
-    int zero = ASCII - first*16;
-    if(first<10){
-        ASCII = first + '0';
-    }else{
-        ASCII = first+55;
-    }
-    UART_Put();
-    if(first<10){
-        ASCII = zero + '0';
-    }else{
-        ASCII = zero+55;
-    }
-    UART_Put();
 }
 
 void EEPROM(void)

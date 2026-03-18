@@ -159,6 +159,17 @@ UART_Get:
 	lds		r16,UDR0			//student comment here
 	sts		ASCII,r16			//student comment here
 	ret							//student comment here
+	
+.global UART_Pass
+UART_Pass:
+	lds r30,UDR0
+	sts ASCII,r30
+	ret
+    	;lds		r16,UCSR0A	    //Loads status register into register 16
+	;sbrc		r16,RXC0	    //Checks if there is an unread buffer if not, ASCII doesnt change
+	;sts		ASCII,r16	    //Loads a value into ASCII if there is an unread buffer
+	;lds		r17,UDR0	    //Reads UDR0 to clear unread status
+	;ret				    //(to not trigger unread wait in other functions)
 
 .global UART_Put
 UART_Put:
