@@ -42,6 +42,8 @@ char EEPROM_DATA;               //shared EEPROM variable with Assembly
 char volts[5];					//string buffer for ADC output
 int Acc;						//Accumulator for ADC use
 
+#define memsize 4
+
 void UART_Puts(const char *str)	//Display a string in the PC Terminal Program
 {
 	while (*str)
@@ -107,25 +109,7 @@ void LCD_STR(const char* str)			//Modified LCD to print given string
 
 void LCD(void)						//Lite LCD demo
 {
-    UART_Pass();
-    char buffer = ASCII;
-    char output = buffer;
-    while(buffer == output){
-        UART_Pass();
-        output = ASCII;
-        
-        UART_Put();
-        UART_PUT_DEC();
-        
-        UART_Puts("\r\no          ");
-        UART_Puts("\r\n o         ");
-        UART_Puts("\r\n    o      ");
-        UART_Puts("\r\n       o   ");
-        UART_Puts("\r\n         o ");
-        UART_Puts("\r\n          o");
-        
-        //LCD_STR("plank           ");
-        /*
+    while(ASCII == 'l'||ASCII == 'L'){
         LCD_STR("plank           ");
         LCD_STR(" plank          ");
         LCD_STR("  plank         ");
@@ -142,23 +126,10 @@ void LCD(void)						//Lite LCD demo
         LCD_STR("nk           pla");
         LCD_STR("ank           pl");
         LCD_STR("lank           p");
-        */
-        
-        //UART_Puts("\r\nChecking Input ");
-        //UART_Pass();
-        //UART_Put();
-        //UART_PUT_DEC();
-        
-        //UART_Puts("\r\nChecking Buffer ");
-        //ASCII = buffer;
-        //UART_Put();
-        //UART_PUT_DEC();
+        LCD_STR("plank           ");
+        UART_Puts("Press L to continue scrolling");
+        UART_Get();
     }
-    
-    UART_Puts("\r\nChecking Input At Last ");
-    UART_Pass();
-    UART_Put();
-    UART_PUT_DEC();
 }
 
 void teamname(void){
@@ -221,7 +192,8 @@ void EEPROM_Address(void)
 {
 	int charconversion;
 	int index = 0;
-    UART_Puts("Enter a 4 Digit Address: ");
+    HIGH = memsize;
+    UART_Puts("\r\nEnter a 4 Digit Address: ");
 	while(index < 4){
         ASCII = '\0';
         while (ASCII == '\0'){
@@ -287,22 +259,27 @@ void EEPROM_Value(void){
 void EEPROM(void)
 {
 	UART_Puts("\r\nEEPROM Write and Read.");
-	/*
-	Re-engineer this subroutine so that a byte of data can be written to any address in EEPROM
-	during run-time via the command line and the same byte of data can be read back and verified after the power to
-	the Xplained Mini board has been cycled. Ask the user to enter a valid EEPROM address and an
-	8-bit data value. Utilize the following two given Assembly based drivers to communicate with the EEPROM. You
-	may modify the EEPROM drivers as needed. User must be able to always return to command line.
-	*/
-	UART_Puts("\r\n");
-    EEPROM_Address();
+    
+    //Limits the high address to memsize * 16^2 for 4 memsize is limited to 0 - 1023 AKA 1 KB
+    //Outputs an error and tells the user to try again if addresss is outside of EEPROM space
+    while(HIGH >= memsize){
+        EEPROM_Address();
+        if(HIGH >= memsize){
+            UART_Puts(MS5);
+        }
+    }
     EEPROM_Value();
 	EEPROM_Write();
-	UART_Puts("\r\n");
-    EEPROM_Address();
+    
+    while(HIGH >= memsize){
+        EEPROM_Address();
+        if(HIGH >= memsize){
+            UART_Puts(MS5);
+        }
+    }
 	EEPROM_Read();
     UART_PUT_DEC();
-	//UART_Put();
+    
 	UART_Puts("\r\n");
 }
 

@@ -162,6 +162,7 @@ UART_Get:
 	
 .global UART_Pass
 UART_Pass:
+	call UART_On
 	lds r30,UDR0
 	sts ASCII,r30
 	ret
