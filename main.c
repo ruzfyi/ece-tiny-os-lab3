@@ -1,4 +1,6 @@
+#define F_CPU 8000000UL
 
+#include <util/delay.h>
  // Lab3P1.c
  //
  // 
@@ -70,6 +72,7 @@ void HELP(void)						//Display available Tiny OS Commands on Terminal
 
 void LCD(void)						//Lite LCD demo
 {
+    char str[16] = "           PLANK";
 	DATA = 0x34;					//Student Comment Here
 	LCD_Write_Command();
 	DATA = 0x08;					//Student Comment Here
@@ -80,13 +83,25 @@ void LCD(void)						//Lite LCD demo
 	LCD_Write_Command();
 	DATA = 0x0f;					//Student Comment Here
 	LCD_Write_Command();
-	LCD_Puts("Hello ECE412!");
-	/*
-	Re-engineer this subroutine to have the LCD endlessly scroll a marquee sign of 
-	your Team's name either vertically or horizontally. Any key press should stop
-	the scrolling and return execution to the command line in Terminal. User must
-	always be able to return to command line.
-	*/
+    
+    _delay_ms(2);
+	for (int i = 0; i < 16; i++)
+    {
+        DATA = 0x02;
+        LCD_Write_Command(); // reset cursor
+        
+        LCD_Puts(str);
+
+        char last_character = str[15];
+        for (int j = 16; j > 0; j--)
+        {
+            str[j] = str[j-1];
+        }
+        str[0] = last_character;
+        
+        
+        _delay_ms(250);
+    }
 }
 
 void ADC(void)						//Lite Demo of the Analog to Digital Converter
